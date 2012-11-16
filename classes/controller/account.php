@@ -11,6 +11,53 @@ class Controller_Account extends \Controller
 {
 
 	/**
+	 * Tries to log the user in
+	 */
+	public function action_log_in()
+	{
+		$fieldset = \Fieldset::forge();
+		$fieldset->add('email', 'Email', array(), array(
+			'required',
+			array('max_length', array(100),)
+		));
+		$fieldset->add('password', 'Password', array(
+			'type' => 'password',
+		), array(
+			'required',
+			array('max_length', array(100),)
+		));
+		
+		$fieldset->add('submit', '', array('type' => 'submit', 'value' => 'Log In'));
+		
+		//Check to see if the form has been submitted
+		if ($fieldset->validation()->run())
+		{
+			//If so get the data and ask Ethanol to create a new user
+			$fields = $fieldset->validated();
+
+			/**
+			 * This is the part that actually logs the user in!               *
+			 * ************************************************************** */
+			$userData = array(
+				'password' => $fields['password'],
+			);
+			echo '<pre>';
+			print_r(\Ethanol\Ethanol::instance()->log_in($fields['email'], $userData));
+			exit;
+		}
+		else if (count($fieldset->error()) > 0)
+		{
+			//There where some errors so show them
+			echo 'There was an error!<br />';
+			echo $fieldset->show_errors();
+		}
+		
+		$fieldset->repopulate();
+
+		return \Response::forge($fieldset->build());
+	}
+
+	/**
 	 * Creates a new user
 	 */
 	public function action_create()
