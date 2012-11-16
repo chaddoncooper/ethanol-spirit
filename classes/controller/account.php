@@ -10,6 +10,9 @@ namespace Ethanol;
 class Controller_Account extends \Controller
 {
 
+	/**
+	 * Creates a new user
+	 */
 	public function action_create()
 	{
 		//Build a fieldset and add some basic validation
@@ -42,7 +45,7 @@ class Controller_Account extends \Controller
 			 * This is the part that actually saves the new user!             *
 			 * ************************************************************** */
 			echo '<pre>';
-			print_r(\Ethanol\Ethanol::instance()->create_user($fields['email'], $fields['email'], $fields['password']));
+			print_r(\Ethanol\Ethanol::instance()->create_user($fields['email'], $fields['password']));
 			exit;
 		}
 		else if (count($fieldset->error()) > 0)
@@ -57,6 +60,9 @@ class Controller_Account extends \Controller
 		return \Response::forge($fieldset->build());
 	}
 
+	/**
+	 * Allows a user to activate their email address
+	 */
 	public function action_activate($key)
 	{
 		try
