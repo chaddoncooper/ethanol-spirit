@@ -7,7 +7,7 @@ namespace Ethanol;
  * @author Steve "uru" West <uruwolf@gmail.com>
  * @license http://philsturgeon.co.uk/code/dbad-license DbaD
  */
-class Controller_Index extends \Controller
+class Controller_Account extends \Controller
 {
 
 	public function action_create()
@@ -55,6 +55,21 @@ class Controller_Index extends \Controller
 		$fieldset->repopulate();
 
 		return \Response::forge($fieldset->build());
+	}
+
+	public function action_activate($key)
+	{
+		try
+		{
+			\Ethanol\Ethanol::instance()->activate($key);
+			echo 'Your account has been activated and you can now log in.';
+		}
+		catch (Exception $exc)
+		{
+			echo $exc;
+		}
+		
+		return \Response::forge();
 	}
 
 }
