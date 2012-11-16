@@ -44,8 +44,11 @@ class Controller_Account extends \Controller
 			/**
 			 * This is the part that actually saves the new user!             *
 			 * ************************************************************** */
+			$userData = array(
+				'password' => $fields['password'],
+			);
 			echo '<pre>';
-			print_r(\Ethanol\Ethanol::instance()->create_user($fields['email'], $fields['password']));
+			print_r(\Ethanol\Ethanol::instance()->create_user($fields['email'], $userData));
 			exit;
 		}
 		else if (count($fieldset->error()) > 0)
