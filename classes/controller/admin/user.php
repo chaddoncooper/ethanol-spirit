@@ -18,6 +18,7 @@ class Controller_Admin_User extends Controller_Admin_Base
 	{
 		$users = \Ethanol\Ethanol::instance()->get_users();
 
+		echo \Html::anchor('ethanol/admin/index', 'Back to the index');
 		echo '<ul>';
 		foreach ($users as $user)
 		{

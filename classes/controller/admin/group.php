@@ -18,6 +18,7 @@ class Controller_Admin_Group extends Controller_Admin_Base
 	{
 		$groups = \Ethanol\Ethanol::instance()->group_list();
 
+		echo \Html::anchor('ethanol/admin/index', 'Back to the index').'<br />';
 		echo \Html::anchor('ethanol/admin/group/add', 'Add Group') . '<ul>';
 		foreach ($groups as $group)
 		{
