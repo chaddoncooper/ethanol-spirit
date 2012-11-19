@@ -18,9 +18,14 @@ class Controller_Account extends \Controller
 		exit;
 	}
 	
-	public function action_temp_logout()
+	/**
+	 * Logs a user out.
+	 */
+	public function action_logout()
 	{
-		\Session::set('ethanol.user', null);
+		\Ethanol\Ethanol::instance()->log_out();
+		
+		return \Response::forge('You have been logged out');
 	}
 
 	/**
