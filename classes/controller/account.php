@@ -9,6 +9,19 @@ namespace Ethanol;
  */
 class Controller_Account extends \Controller
 {
+	
+	public function action_test()
+	{
+		var_dump(\Ethanol\Ethanol::instance()->logged_in());
+		echo '<pre>';
+		print_r(\Ethanol\Ethanol::instance()->current_user());
+		exit;
+	}
+	
+	public function action_temp_logout()
+	{
+		\Session::set('ethanol.user', null);
+	}
 
 	/**
 	 * Tries to log the user in
