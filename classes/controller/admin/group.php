@@ -81,7 +81,45 @@ class Controller_Admin_Group extends Controller_Admin_Base
 	
 	public function action_edit($id)
 	{
+		$group = \Ethanol\Ethanol::instance()->get_group($id);
 		
+		$fieldset = \Fieldset::forge();
+
+		$fieldset->add('name', 'Name', array(), array(
+			'required',
+			array('max_length', array(100)),
+		));
+		$fieldset->add('submit', '', array('type' => 'submit', 'value' => 'Save'));
+
+		if ($fieldset->validation()->run())
+		{
+			$fields = $fieldset->validated();
+
+			/**
+			 * This is the part that actually saves the group
+			 * ************************************************************** */
+			try
+			{
+				//You can pass just an ID but passing the group object removes
+				//the need for an extra query
+				\Ethanol\Ethanol::instance()->update_group($group, $fields['name']);
+				echo 'The group, '.$fields['name'].', was saved.<br />';
+			}
+			catch (\Ethanol\ColumnNotUnique $exc)
+			{
+				echo 'The group name "'.$fields['name'].'" is already in use!<br />';
+			}
+		}
+		else if (count($fieldset->error()) > 0)
+		{
+			echo 'There was an error!<br />';
+			echo $fieldset->show_errors();
+		}
+
+		$fieldset->populate($group, true);
+
+		echo \Html::anchor('ethanol/admin/group', 'Back to the list').'<br />';
+		return \Response::forge($fieldset->build());
 	}
 
 }
