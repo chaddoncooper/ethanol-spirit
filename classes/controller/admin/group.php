@@ -13,7 +13,22 @@ class Controller_Admin_Group extends Controller_Admin_Base
 
 	public function action_index()
 	{
-		//Show a list of groups
+		$groups = \Ethanol\Ethanol::instance()->group_list();
+		
+		echo \Html::anchor('ethanol/admin/group/add', 'Add Group').'<ul>';
+		foreach($groups as $group)
+		{
+			echo '<li>';
+			echo \Html::anchor('ethanol/admin/group/delete/'.$group->id, 'Delete');
+			echo ' ';
+			echo \Html::anchor('ethanol/admin/group/edit/'.$group->id, 'Edit');
+			echo ' ';
+			echo $group->name;
+			echo '</li>';
+		}
+		echo '</ul>';
+		
+		return \Response::forge();
 	}
 
 	/**
@@ -58,9 +73,15 @@ class Controller_Admin_Group extends Controller_Admin_Base
 		return \Response::forge($fieldset->build());
 	}
 
-	public function action_delete()
+	public function action_delete($id)
 	{
-		//Delete a group
+		\Ethanol\Ethanol::instance()->delete_group($id);
+		\Response::redirect('ethanol/admin/group');
+	}
+	
+	public function action_edit($id)
+	{
+		
 	}
 
 }
