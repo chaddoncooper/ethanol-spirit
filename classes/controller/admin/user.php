@@ -35,14 +35,40 @@ class Controller_Admin_User extends Controller_Admin_Base
 	 */
 	public function action_groups($id)
 	{
+		$user = \Ethanol\Ethanol::instance()->get_user($id);
+
 		$fieldset = \Fieldset::forge();
 
 		foreach (\Ethanol\Ethanol::instance()->group_list() as $group)
 		{
-			$fieldset->add('group[' . $group->id . ']', $group->name, array('type' => 'checkbox', 'value' => '1'));
+			$attributes = array(
+				'type' => 'checkbox',
+				'value' => $group->id,
+			);
+
+			if (array_key_exists($group->id, $user->groups))
+			{
+				$attributes['checked'] = 'checked';
+			}
+
+			$fieldset->add('group[' . $group->id . ']', $group->name, $attributes);
 		}
 
 		$fieldset->add('submit', '', array('type' => 'submit', 'value' => 'save'));
+
+		if ($fieldset->validation()->run())
+		{
+			$fields = $fieldset->validated();
+			
+			\Ethanol\Ethanol::instance()->set_user_groups($user, $fields['group']);
+		}
+		else if (count($fieldset->error()) > 0)
+		{
+			echo 'There was an error!<br />';
+			echo $fieldset->show_errors();
+		}
+
+		$fieldset->repopulate();
 
 		echo \Html::anchor('ethanol/admin/user', 'Back to the list');
 		return \Response::forge($fieldset->build());
