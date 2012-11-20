@@ -16,6 +16,8 @@ class Controller_Admin_User extends Controller_Admin_Base
 	 */
 	public function action_index()
 	{
+		$this->check_access('admin.users');
+		
 		$users = \Ethanol\Ethanol::instance()->get_users();
 
 		echo \Html::anchor('ethanol/admin/index', 'Back to the index');
@@ -36,6 +38,8 @@ class Controller_Admin_User extends Controller_Admin_Base
 	 */
 	public function action_groups($id)
 	{
+		$this->check_access('admin.users.edit_groups');
+		
 		$user = \Ethanol\Ethanol::instance()->get_user($id);
 
 		$fieldset = \Fieldset::forge();

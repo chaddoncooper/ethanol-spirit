@@ -16,6 +16,8 @@ class Controller_Admin_Group extends Controller_Admin_Base
 	 */
 	public function action_index()
 	{
+		$this->check_access('admin.groups');
+		
 		$groups = \Ethanol\Ethanol::instance()->group_list();
 
 		echo \Html::anchor('ethanol/admin/index', 'Back to the index') . '<br />';
@@ -42,6 +44,8 @@ class Controller_Admin_Group extends Controller_Admin_Base
 	 */
 	public function action_add()
 	{
+		$this->check_access('admin.groups.add');
+		
 		$fieldset = \Fieldset::forge();
 
 		$fieldset->add('name', 'Name', array(), array(
@@ -84,6 +88,8 @@ class Controller_Admin_Group extends Controller_Admin_Base
 	 */
 	public function action_delete($id)
 	{
+		$this->check_access('admin.groups.delete');
+		
 		\Ethanol\Ethanol::instance()->delete_group($id);
 		\Response::redirect('ethanol/admin/group');
 	}
@@ -93,6 +99,8 @@ class Controller_Admin_Group extends Controller_Admin_Base
 	 */
 	public function action_edit($id)
 	{
+		$this->check_access('admin.groups.edit');
+		
 		$group = \Ethanol\Ethanol::instance()->get_group($id);
 
 		$fieldset = \Fieldset::forge();
@@ -139,6 +147,8 @@ class Controller_Admin_Group extends Controller_Admin_Base
 	 */
 	public function action_permissions($id)
 	{
+		$this->check_access('admin.groups.permissions');
+		
 		$fieldset = \Fieldset::forge();
 
 		$group = \Ethanol\Ethanol::instance()->get_group($id);
@@ -185,6 +195,8 @@ class Controller_Admin_Group extends Controller_Admin_Base
 	 */
 	public function action_remove_permission($id, $permission)
 	{
+		$this->check_access('admin.groups.permissions');
+		
 		\Ethanol\Ethanol::instance()->remove_group_permission($id, $permission);
 		
 		\Response::redirect('ethanol/admin/group/permissions/'.$id);

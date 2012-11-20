@@ -21,7 +21,7 @@ class Controller_Account extends \Controller
 	/**
 	 * Logs a user out.
 	 */
-	public function action_logout()
+	public function action_log_out()
 	{
 		\Ethanol\Ethanol::instance()->log_out();
 		

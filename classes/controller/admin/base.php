@@ -12,4 +12,13 @@ namespace Ethanol;
 abstract class Controller_Admin_Base extends \Controller
 {
 	
+	public function check_access($permission)
+	{
+		if(!\Ethanol\Ethanol::instance()->user_has_permission($permission))
+		{
+			throw new AccessDenied('GTFO!');
+		}
+	}
 }
+
+class AccessDenied extends \Exception{}
