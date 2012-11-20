@@ -170,7 +170,7 @@ class Controller_Admin_Group extends Controller_Admin_Base
 		foreach($group->permissions as $permission)
 		{
 			echo '<li>';
-			echo $permission->identifier;
+			echo \Html::anchor('ethanol/admin/group/remove_permission/'.$id.'/'.$permission->id, $permission->identifier);
 			echo '</li>';
 		}
 		echo '</ul>';
@@ -180,4 +180,14 @@ class Controller_Admin_Group extends Controller_Admin_Base
 		return \Response::forge($fieldset->build());
 	}
 
+	/**
+	 * Removes a permission from a group
+	 */
+	public function action_remove_permission($id, $permission)
+	{
+		\Ethanol\Ethanol::instance()->remove_group_permission($id, $permission);
+		
+		\Response::redirect('ethanol/admin/group/permissions/'.$id);
+	}
+	
 }
