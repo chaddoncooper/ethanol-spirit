@@ -18,7 +18,7 @@ class Controller_Admin_Group extends Controller_Admin_Base
 	{
 		$groups = \Ethanol\Ethanol::instance()->group_list();
 
-		echo \Html::anchor('ethanol/admin/index', 'Back to the index').'<br />';
+		echo \Html::anchor('ethanol/admin/index', 'Back to the index') . '<br />';
 		echo \Html::anchor('ethanol/admin/group/add', 'Add Group') . '<ul>';
 		foreach ($groups as $group)
 		{
@@ -26,6 +26,8 @@ class Controller_Admin_Group extends Controller_Admin_Base
 			echo \Html::anchor('ethanol/admin/group/delete/' . $group->id, 'Delete');
 			echo ' ';
 			echo \Html::anchor('ethanol/admin/group/edit/' . $group->id, 'Edit');
+			echo ' ';
+			echo \Html::anchor('ethanol/admin/group/permissions/' . $group->id, 'Permissions');
 			echo ' ';
 			echo $group->name;
 			echo '</li>';
@@ -128,6 +130,52 @@ class Controller_Admin_Group extends Controller_Admin_Base
 
 		$fieldset->populate($group, true);
 
+		echo \Html::anchor('ethanol/admin/group', 'Back to the list') . '<br />';
+		return \Response::forge($fieldset->build());
+	}
+
+	/**
+	 * Allows permssions to be added/removed from groups
+	 */
+	public function action_permissions($id)
+	{
+		$fieldset = \Fieldset::forge();
+
+		$group = \Ethanol\Ethanol::instance()->get_group($id);
+
+		$fieldset->add('permission', '', array(
+			'type' => 'select',
+			'options' => \Ethanol\Ethanol::instance()->get_permission_select()
+		));
+		$fieldset->add('submit', '', array('type' => 'submit', 'value' => 'Add'));
+
+		if ($fieldset->validation()->run())
+		{
+			$fields = $fieldset->validated();
+
+			/**
+			 * This is the line that actually adds the permission
+			 * ************************************************************** */
+			\Ethanol\Ethanol::instance()->add_group_permission($group, $fields['permission']);
+			
+			\Response::redirect('ethanol/admin/group/permissions/' . $id);
+		}
+		elseif (count($fieldset->error()) > 0)
+		{
+			echo 'There was an error!<br />';
+			echo $fieldset->show_errors();
+		}
+		
+		echo '<ul>';
+		foreach($group->permissions as $permission)
+		{
+			echo '<li>';
+			echo $permission->identifier;
+			echo '</li>';
+		}
+		echo '</ul>';
+
+		echo 'Editing: ' . $group->name . '<br />';
 		echo \Html::anchor('ethanol/admin/group', 'Back to the list') . '<br />';
 		return \Response::forge($fieldset->build());
 	}
