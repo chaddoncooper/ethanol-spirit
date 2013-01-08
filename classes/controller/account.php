@@ -27,52 +27,24 @@ class Controller_Account extends \Controller
 		
 		return \Response::forge('You have been logged out');
 	}
-
+	
 	/**
 	 * Tries to log the user in
 	 */
 	public function action_log_in()
 	{
-		$fieldset = \Fieldset::forge();
-		$fieldset->add('email', 'Email', array(), array(
-			'required',
-			array('max_length', array(100),)
-		));
-		$fieldset->add('password', 'Password', array(
-			'type' => 'password',
-		), array(
-			'required',
-			array('max_length', array(100),)
-		));
+		$input = \Input::all();
 		
-		$fieldset->add('submit', '', array('type' => 'submit', 'value' => 'Log In'));
-		
-		//Check to see if the form has been submitted
-		if ($fieldset->validation()->run())
+		if(isset($input['driver']))
 		{
-			//If so get the data and ask Ethanol to create a new user
-			$fields = $fieldset->validated();
-
-			/**
-			 * This is the part that actually logs the user in!               *
-			 * ************************************************************** */
-			$userData = array(
-				'password' => $fields['password'],
-			);
-			echo '<pre>';
-			print_r(\Ethanol\Ethanol::instance()->log_in($fields['email'], $userData));
+			echo 'User logged in:<pre>';
+			//Make the call to Ethanol to try a login
+			print_r(\Ethanol\Ethanol::instance()->log_in($input));
 			exit;
 		}
-		else if (count($fieldset->error()) > 0)
-		{
-			//There where some errors so show them
-			echo 'There was an error!<br />';
-			echo $fieldset->show_errors();
-		}
 		
-		$fieldset->repopulate();
-
-		return \Response::forge($fieldset->build());
+		$forms = \Ethanol\Ethanol::instance()->get_form();
+		return implode('<br />', $forms);
 	}
 
 	/**
@@ -111,9 +83,10 @@ class Controller_Account extends \Controller
 			 * ************************************************************** */
 			$userData = array(
 				'password' => $fields['password'],
+				'email' => $fields['email'],
 			);
 			echo '<pre>';
-			print_r(\Ethanol\Ethanol::instance()->create_user($fields['email'], $userData));
+			print_r(\Ethanol\Ethanol::instance()->create_user($userData));
 			exit;
 		}
 		else if (count($fieldset->error()) > 0)
