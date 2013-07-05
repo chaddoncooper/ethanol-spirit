@@ -67,7 +67,7 @@ class Controller_Account extends \Controller
 		$fieldset->add('password2', 'Password again', array('type' => 'password'), array(
 			'required',
 			array('max_length', array(100)),
-			array('match_value', 'password'),
+			array('match_field', 'password'),
 		));
 
 		$fieldset->add('submit', '', array('type' => 'submit', 'value' => 'Create'));
